@@ -91,8 +91,16 @@ appendSearchBar();
 
 // create a function to add matched student record into the matchedArray
 function searchNames (searchInput, list) {
+   // check whether there was anything in the matchedArray, if yes, clear the matchedArray
+   if(matchedArray.length > 0) {
+      matchedArray.length = [];
+   }
+
    for (let i = 0; i < list.length; i++) {
+      // clear off the original student list from the page
       list[i].style.display = 'none';
+
+      // check if the searchInput value matches any of the student record, if yes, add that student record into matchedArray
       if (searchInput.value.length !== 0 && list[i].textContent.toLowerCase().includes(searchInput.value.toLowerCase())) {
          matchedArray.push(list[i]);
       }
@@ -101,6 +109,7 @@ function searchNames (searchInput, list) {
 
 // add event listener to search button
 button.addEventListener("click", () => {
+   
    // call the searchNames function
    searchNames(input, listItems);
    
@@ -109,7 +118,7 @@ button.addEventListener("click", () => {
    if (checkPagination !== 'undefined') {
       checkPagination.parentNode.removeChild(checkPagination);
    }
-
+   
    // check whether any results are found, if yes, show the results using showPage and appendPageLinks functions. If not, show the noResultTxt
    if (matchedArray.length > 0) {
       showPage (matchedArray, 1);
@@ -122,4 +131,7 @@ button.addEventListener("click", () => {
       noResultTxt.textContent = "Sorry, we couldn't find any results matching '" + input.value + " '.";
       txtPosition.insertBefore(noResultTxt, studentListPosition);
    }
+   
+   // clear out the input value in the search box
+   input.value = '';
 })
