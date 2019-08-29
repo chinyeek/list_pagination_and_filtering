@@ -3,25 +3,12 @@ Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
    
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
+//Create two variables: 1st variable holds the entire student list, 2nd variable indicates the number of student's records to display per page
 
-
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
-/* Create two variables: 1st variable holds the entire student list, 2nd variable indicates the number of student's records we want to display per page
-*/
 const listItems = document.getElementsByClassName("student-item");
 let itemsPerPage = 10; 
 
-//create a function to dynamically show the page numbers based on the total number of student records we have (e.g. 54 records - 6 pages, 44 records - 5 pages)
+//create a function to dynamically show the page - total page number changes based on the total number of student records (e.g. 54 records - 6 pages, 44 records - 5 pages etc.)
 
 function showPage (list, page) {
    let startIndex = (page * itemsPerPage) - itemsPerPage;
@@ -57,14 +44,15 @@ function appendPageLinks (list) {
       li.appendChild(a);
    }
    
+   // add 'active' class to the first page initially
    let aa = ul.firstElementChild.firstElementChild
    aa.className = 'active';
    
-   // add link function to each page number
-   const x = div.getElementsByTagName('a');
+   // add link function to each pagination anchor text
+   const anchor = div.getElementsByTagName('a');
    
-   for (let i = 0; i < x.length; i++) {
-      x[i].addEventListener("click", (e) => {
+   for (let i = 0; i < anchor.length; i++) {
+      anchor[i].addEventListener("click", (e) => {
          let current = document.getElementsByClassName("active");
          current[0].className = current[0].className.replace("active","");
          e.target.className = "active";
@@ -73,15 +61,20 @@ function appendPageLinks (list) {
    } 
 }
 
+//call the function to show first page initially and show pagination links
 showPage(listItems, 1);
 appendPageLinks(listItems);
 
+//create variables for appending search bar
 const header = document.querySelector('.page-header');
 const div = document.createElement('div');
 const input = document.createElement('input');
 const button = document.createElement('button');
+
+// create an array to store search result
 var matchedArray = [];
 
+// create a function to append the search bar on top of the page
 function appendSearchBar() {
    div.className = 'student-search';
    header.appendChild(div);
@@ -93,8 +86,10 @@ function appendSearchBar() {
    div.appendChild(button);
 }
 
+// call the function to append search bar on top of the page
 appendSearchBar();
 
+// create a function to add matched student record into the matchedArray
 function searchNames (searchInput, list) {
    for (let i = 0; i < list.length; i++) {
       list[i].style.display = 'none';
@@ -103,37 +98,28 @@ function searchNames (searchInput, list) {
       }
    }
 }
-   
+
+// add event listener to search button
 button.addEventListener("click", () => {
+   // call the searchNames function
    searchNames(input, listItems);
-   showPage (matchedArray, 1);
-   //appendPageLinks(matchedArray);
+   
+   // check whether pagination links exist, if yes, remove these pagination links
+   const checkPagination = document.querySelector('.pagination');
+   if (checkPagination !== 'undefined') {
+      checkPagination.parentNode.removeChild(checkPagination);
+   }
+
+   // check whether any results are found, if yes, show the results using showPage and appendPageLinks functions. If not, show the noResultTxt
+   if (matchedArray.length > 0) {
+      showPage (matchedArray, 1);
+      appendPageLinks(matchedArray);
+   } else {
+      const noResultTxt = document.createElement('div');
+      const txtPosition = document.querySelector('.page');
+      const studentListPosition = document.querySelector('.student-list');
+      noResultTxt.className = 'message';
+      noResultTxt.textContent = "Sorry, we couldn't find any results matching '" + input.value + " '.";
+      txtPosition.insertBefore(noResultTxt, studentListPosition);
+   }
 })
-
-  /*  input.addEventListener("keyup", () => {
-      searchNames(input, listItems);
-      const result = document.getElementsByClassName('match');
-      appendPageLinks(result);
-      showPage (result, 1);
-   }) */
-
-/*** 
- Create the `showPage` function to hide all of the items in the 
- list except for the ten you want to show.
- 
- Pro Tips: 
- - Keep in mind that with a list of 54 students, the last page 
- will only display four.
- - Remember that the first student has an index of 0.
- - Remember that a function `parameter` goes in the parens when 
- you initially define the function, and it acts as a variable 
- or a placeholder to represent the actual function `argument` 
- that will be passed into the parens later when you call or 
- "invoke" the function 
- ***/
-
-
-/*** 
- Create the `appendPageLinks function` to generate, append, and add 
- functionality to the pagination buttons.
- ***/
