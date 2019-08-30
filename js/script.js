@@ -22,7 +22,10 @@ function showPage (list, page) {
    }
 }
 
+// create a function to append the page links to the bottom of the page
+
 function appendPageLinks (list) {
+   
    // create a 'div' element with class name "pagination"
    const page = document.querySelector('.page');
    const div = document.createElement('div');
@@ -90,16 +93,19 @@ function appendSearchBar() {
 appendSearchBar();
 
 // create a function to add matched student record into the matchedArray
-function searchNames (searchInput, list) {
-   // check whether there was anything in the matchedArray, if yes, clear the matchedArray
-   if(matchedArray.length > 0) {
-      matchedArray.length = [];
-   }
 
+function searchNames (searchInput, list) {
+   
+   // check whether anything was stored in the matchedArray from previous search, if yes, clear the matchedArray
+   if(matchedArray.length > 0) {
+      matchedArray.length = 0;
+   }
+   
    for (let i = 0; i < list.length; i++) {
+      
       // clear off the original student list from the page
       list[i].style.display = 'none';
-
+      
       // check if the searchInput value matches any of the student record, if yes, add that student record into matchedArray
       if (searchInput.value.length !== 0 && list[i].textContent.toLowerCase().includes(searchInput.value.toLowerCase())) {
          matchedArray.push(list[i]);
@@ -115,11 +121,12 @@ button.addEventListener("click", () => {
    
    // check whether pagination links exist, if yes, remove these pagination links
    const checkPagination = document.querySelector('.pagination');
-   if (checkPagination !== 'undefined') {
-      checkPagination.parentNode.removeChild(checkPagination);
+   const parent = document.querySelector('.page');
+   if (checkPagination !== 'undefined' || checkPagination === 'null') {
+      parent.removeChild(checkPagination);
    }
    
-   // check whether any results are found, if yes, show the results using showPage and appendPageLinks functions. If not, show the noResultTxt
+   // check whether any results are found, if yes, show the results using showPage and appendPageLinks functions. If not,show the noResultTxt
    if (matchedArray.length > 0) {
       showPage (matchedArray, 1);
       appendPageLinks(matchedArray);
